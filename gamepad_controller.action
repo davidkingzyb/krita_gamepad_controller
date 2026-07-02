@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ActionCollection version="2" name="Scripts">
+    <Actions category="Scripts">
+        <text>My Scripts</text>
+        <Action name="gamepad_start">
+        <icon></icon>
+        <text>gamepad</text>
+        <whatsThis>gamepad controller start</whatsThis>
+        <toolTip>gamepad controller start F5</toolTip>
+        <iconText></iconText>
+        <activationFlags>10000</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>ctrl+f5</shortcut>
+        <isCheckable>true</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+    </Actions>
+</ActionCollection>

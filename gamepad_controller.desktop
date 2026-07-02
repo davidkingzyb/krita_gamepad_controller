@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=gamepad_controller
+X-Python-2-Compatible=false
+X-Krita-Manual=README.html
+Name=gamepad_controller
+Comment=gamepad controller for krita
