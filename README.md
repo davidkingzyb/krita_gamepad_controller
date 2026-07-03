@@ -4,7 +4,7 @@
 
 2026/07/02 by DKZ
 
-![tutorial](https://private-user-images.githubusercontent.com/6694635/616670624-0568eac5-8145-4108-9592-257d831fd588.png)
+![tutorial](https://github.com/user-attachments/assets/0568eac5-8145-4108-9592-257d831fd588)
 
 ### Install
 [官方安装文档](https://docs.krita.org/zh_CN/user_manual/python_scripting/install_custom_python_plugin.html)    
