@@ -4,6 +4,8 @@
 
 2026/07/02 by DKZ
 
+![tutorial](https://private-user-images.githubusercontent.com/6694635/616670624-0568eac5-8145-4108-9592-257d831fd588.png)
+
 ### Install
 [官方安装文档](https://docs.krita.org/zh_CN/user_manual/python_scripting/install_custom_python_plugin.html)    
 内置 [zeth/inputs](https://github.com/zeth/inputs/tree/master) 包,直接下载zip包开箱即用.    
