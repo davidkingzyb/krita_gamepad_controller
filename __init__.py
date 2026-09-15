@@ -42,6 +42,7 @@ class GamepadControllerExtension(Extension):
                 "ABS_RZ":eraser,#"erase_action",
                 "BTN_TR":sample_color,
                 "BTN_THUMBL":"zoom_to_fit",
+            },{
                 "BTN_WEST":"decrease_brush_size",
                 "BTN_NORTH":"increase_brush_size",
                 "BTN_SOUTH":"decrease_opacity",

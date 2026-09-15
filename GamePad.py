@@ -15,6 +15,23 @@ def debug_log(message):
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         f.write(f"[{timestamp}] {message}\n")
 
+class LongPress(threading.Thread):
+    def __init__(self):
+        super().__init__()
+        self.daemon = True
+        self.running = True
+        self.app=Krita.instance()
+        self.v=None
+
+    def setValue(self,v):
+        self.v=v
+
+    def run(self):
+        while self.running and self.v:
+            # debug_log(self.v)
+            self.app.action(self.v).trigger()
+            time.sleep(0.1)
+
 class GamepadThread(threading.Thread):
     def __init__(self):
         super().__init__()
@@ -24,15 +41,19 @@ class GamepadThread(threading.Thread):
         self._consecutive_errors = 0  # 添加连续错误计数器
         self._max_consecutive_errors = 10  # 最大连续错误次数
         self.key_action={}
+        self.press_action={}
+        self.pressing=None
         self.app=Krita.instance()
         self.lx=0
         self.ly=0
         self.rx=0
         self.ry=0
         self.deg=0
+        self.maxR=0
 
-    def setKeyActionMap(self,key_action):
+    def setKeyActionMap(self,key_action,press_action):
         self.key_action=key_action
+        self.press_action=press_action
 
     def run(self):
         while self.running:
@@ -42,7 +63,6 @@ class GamepadThread(threading.Thread):
                 # 成功获取事件，重置错误计数
                 self._consecutive_errors = 0
                 self.error_message = None
-
                 for event in events:
                     if self.running:  # 检查是否仍在运行
                         self.process_event(event)
@@ -76,7 +96,19 @@ class GamepadThread(threading.Thread):
             else:
                 v(self.app)
             return
-        elif event.code == 'ABS_HAT0Y':#-1 up 1 down
+        if event.code in self.press_action.keys() and event.state!=0:
+            v=self.press_action[event.code]
+            if self.pressing:
+                self.pressing.running=False
+            self.pressing=LongPress()
+            self.pressing.setValue(v)
+            self.pressing.start()
+            return
+        if event.code in self.press_action.keys() and event.state==0 and self.pressing:
+            self.pressing.running=False
+            self.pressing=None    
+            return   
+        if event.code == 'ABS_HAT0Y':#-1 up 1 down
             ud = event.state# -1 1
             if ud==-1:
                 self.app.action("make_brush_color_saturated").trigger()
@@ -108,18 +140,20 @@ class GamepadThread(threading.Thread):
         x=-self.ly
         y=-self.lx 
         radius=math.hypot(x,y)
-        if radius>0.1:
+        if radius>0.1 and radius>self.maxR:
+            self.maxR=radius
             rad = math.atan2(y, x)
             self.deg = math.degrees(rad)
             r,g,b=HSV2RGB(self.deg,radius,1)
             set_color(r,g,b,self.app)
+        if radius<0.1:
+            self.maxR=0
 
     def grey_color(self):
         radius=math.hypot(self.rx,self.ry)
         if radius>0.1:
             r,g,b=HSV2RGB(self.deg,abs(self.rx),(self.ry+1)*0.5)
             set_color(r,g,b,self.app)
-
 
 
 class POINT(Structure):
@@ -158,8 +192,6 @@ def hue_color(x,y,app):
         deg = math.degrees(rad)
         r,g,b=HSV2RGB(deg,r,1)
         set_color(r,g,b,app)
-
-
 
 def HSV2RGB(h, s, v):# 360,1,1
     if s == 0:
